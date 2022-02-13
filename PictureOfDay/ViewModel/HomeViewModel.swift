@@ -53,10 +53,12 @@ class HomeViewModel : HomeViewModelProtocol {
                 self.updateViewOnSucess?(data,dateStr)
                 break
             case .failure(_):
-                self.updateViewOnFailure?("No data available for date: \(dateStr) \n Please Pick Another Day")
+               
                 if let catchInfo = UserDefaultHelper().catchInfo, loadFromCacheIfFails ,let catchData = catchInfo.catchInfo{
                     self.dataResponce = catchData
                     self.updateViewOnSucess?(catchData,catchInfo.synchdate)
+                }else{
+                    self.updateViewOnFailure?("No data available for date: \(dateStr) \n Please Pick Another Day")
                 }
                 break
             }
