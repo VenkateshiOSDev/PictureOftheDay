@@ -16,6 +16,7 @@ protocol HomeViewModelProtocol: AnyObject{
     var apiKey:String {get}
     var onFvaroite : Bool{get}
     func onTapOnFavroite()
+    var dataResponce : BaseResponse? {get}
 }
 class HomeViewModel : HomeViewModelProtocol {
     var updateViewOnSucess : ((BaseResponse,String)->Void)? = { _,_ in }
@@ -23,7 +24,7 @@ class HomeViewModel : HomeViewModelProtocol {
     private let catchRequired:Bool
     var apiKey:String
     var dateFormat:String
-    private var dataResponce : BaseResponse?
+    var dataResponce : BaseResponse?
     var onFvaroite : Bool{
         get {
             return UserDefaultHelper().wishList?.contains(where: {$0.date == dataResponce?.date ?? ""}) == true

@@ -114,12 +114,17 @@ class HomeVC: UIViewController {
             imgViewMedia = nil
             webView = WKWebView(frame: .zero)
             webView?.frame = merdiaView.bounds
+            webView?.translatesAutoresizingMaskIntoConstraints = false
             merdiaView.addSubview(webView!)
             if let  url = URL(string:data.url) {
                 webView?.load(URLRequest(url: url))
             }
             webView?.layer.cornerRadius = 8
             webView?.clipsToBounds = true
+            webView?.leadingAnchor.constraint(equalTo: merdiaView.leadingAnchor).isActive = true
+            webView?.trailingAnchor.constraint(equalTo: merdiaView.trailingAnchor,constant:0).isActive = true
+            webView?.topAnchor.constraint(equalTo: merdiaView.topAnchor,constant:0).isActive = true
+            webView?.bottomAnchor.constraint(equalTo: merdiaView.bottomAnchor,constant:0).isActive = true
         }
         else
         {
@@ -127,10 +132,15 @@ class HomeVC: UIViewController {
             webView = nil
             imgViewMedia = UIImageView(frame: .zero)
             imgViewMedia?.frame = merdiaView.bounds
+            imgViewMedia?.translatesAutoresizingMaskIntoConstraints = false
             merdiaView.addSubview(imgViewMedia!)
             imgViewMedia?.loadImage(withUrl: data.url)
             imgViewMedia?.layer.cornerRadius = 8
             imgViewMedia?.clipsToBounds = true
+            imgViewMedia?.leadingAnchor.constraint(equalTo: merdiaView.leadingAnchor).isActive = true
+            imgViewMedia?.trailingAnchor.constraint(equalTo: merdiaView.trailingAnchor,constant:0).isActive = true
+            imgViewMedia?.topAnchor.constraint(equalTo: merdiaView.topAnchor,constant:0).isActive = true
+            imgViewMedia?.bottomAnchor.constraint(equalTo: merdiaView.bottomAnchor,constant:0).isActive = true
             
         }
         favButton.isSelected = viewModel?.onFvaroite ?? false
