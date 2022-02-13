@@ -54,6 +54,9 @@ extension FavoritesListVC : UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.tabBarController?.selectedIndex = 0
+    }
     func removeFromCatch(at index:Int){
         viewModel.removeFromCatche(at: index)
         tblList.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)

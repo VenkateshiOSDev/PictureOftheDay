@@ -8,7 +8,7 @@
 import Foundation
 
 protocol HomeViewModelProtocol: AnyObject{
-    func viewDidload()
+    func viewDidload(date:Date)
     func fetchPictureOfTheDay(date:Date,loadFromCacheIfFails:Bool)
     var updateViewOnSucess : ((BaseResponse,String)->Void)? { get set }
     var updateViewOnFailure : ((String)->Void)? { get set }
@@ -36,8 +36,8 @@ class HomeViewModel : HomeViewModelProtocol {
         self.dateFormat = dateFormat
     }
     
-    func viewDidload(){
-        fetchPictureOfTheDay(date:Date(), loadFromCacheIfFails: true)
+    func viewDidload(date:Date){
+        fetchPictureOfTheDay(date:date, loadFromCacheIfFails: true)
     }
     
     func fetchPictureOfTheDay(date:Date,loadFromCacheIfFails:Bool){

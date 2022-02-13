@@ -82,7 +82,12 @@ class HomeVC: UIViewController {
     }
     func setpViewModel(view_Model:HomeViewModelProtocol){
         viewModel = view_Model
-        viewModel?.viewDidload()
+        if Constants.Selecteday == "" {
+            viewModel?.viewDidload(date: Date())
+        }else{
+            
+        }
+        
         indicator.startAnimating()
         txtDatePicker.text = Date().string(format: Constants.dateFormat)
         viewModel?.updateViewOnSucess = { [weak self] (res,lastSynchdate) in

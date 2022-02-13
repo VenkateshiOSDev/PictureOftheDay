@@ -8,7 +8,7 @@
 import XCTest
 @testable import PictureOfDay
 class HomeViewModelTests: XCTestCase {
-
+    
     func test_viewModelWithExclodeViewDidLoad(){
         let sut = HomeViewModel(catchRequired: false,
                                 apiKey: Constants.ApiKey,
@@ -43,14 +43,14 @@ class HomeViewModelTests: XCTestCase {
             captureResult.append(false)
             exp.fulfill()
         }
-        sut.viewDidload()
+        sut.fetchPictureOfTheDay(date:  Date(), loadFromCacheIfFails: false)
         wait(for: [exp], timeout: 5)
         XCTAssertEqual(captureResult,[true])
     }
     
     func test_viewModelWithInvalidKey(){
         let sut = HomeViewModel(catchRequired: false,
-                                apiKey: "",
+                                apiKey: " ",
                                 dateFormat: Constants.dateFormat)
         var captureResult = [Bool]()
         let exp = expectation(description: "Wait for load completion")
@@ -59,17 +59,17 @@ class HomeViewModelTests: XCTestCase {
             captureResult.append(true)
             exp.fulfill()
         }
-
+        
         sut.updateViewOnFailure = { [weak self] (error) in
             if self == nil { return }
             captureResult.append(false)
             exp.fulfill()
         }
-        sut.viewDidload()
+        sut.fetchPictureOfTheDay(date:  Date(), loadFromCacheIfFails: false)
         wait(for: [exp], timeout: 10.0)
         XCTAssertEqual(captureResult,[false])
     }
-
+    
     func test_viewModelWithInvalidFormat(){
         let sut = HomeViewModel(catchRequired: false,
                                 apiKey: Constants.ApiKey,
@@ -81,17 +81,17 @@ class HomeViewModelTests: XCTestCase {
             captureResult.append(true)
             exp.fulfill()
         }
-
+        
         sut.updateViewOnFailure = { [weak self] (error) in
             if self == nil { return }
             captureResult.append(false)
             exp.fulfill()
         }
-        sut.viewDidload()
+        sut.fetchPictureOfTheDay(date:  Date(), loadFromCacheIfFails: false)
         wait(for: [exp], timeout: 5.0)
         XCTAssertEqual(captureResult,[false])
     }
-
+    
     func test_viewModelWithInvalidFormatAndApikey(){
         let sut = HomeViewModel(catchRequired: false,
                                 apiKey: "",
@@ -103,13 +103,13 @@ class HomeViewModelTests: XCTestCase {
             captureResult.append(true)
             exp.fulfill()
         }
-
+        
         sut.updateViewOnFailure = { [weak self] (error) in
             if self == nil { return }
             captureResult.append(false)
             exp.fulfill()
         }
-        sut.viewDidload()
+        sut.fetchPictureOfTheDay(date:  Date(), loadFromCacheIfFails: false)
         wait(for: [exp], timeout: 5.0)
         XCTAssertEqual(captureResult,[false])
     }
@@ -122,13 +122,13 @@ class HomeViewModelTests: XCTestCase {
             captureResult.append(true)
             
         }
-
+        
         sut?.updateViewOnFailure = { [weak self] (error) in
             if self == nil { return }
             captureResult.append(false)
             
         }
-        sut?.viewDidload()
+        sut?.viewDidload(date: Date())
         sut = nil
         XCTAssertEqual(captureResult,[])
     }
@@ -141,13 +141,13 @@ class HomeViewModelTests: XCTestCase {
             captureResult.append(true)
             
         }
-
+        
         sut?.updateViewOnFailure = { [weak self] (error) in
             if self == nil { return }
             captureResult.append(false)
             
         }
-        sut?.viewDidload()
+        sut?.viewDidload(date: Date())
         sut?.onTapOnFavroite()
         XCTAssertEqual(sut?.onFvaroite,true)
     }
@@ -160,49 +160,43 @@ class HomeViewModelTests: XCTestCase {
             captureResult.append(true)
             
         }
-
+        
         sut?.updateViewOnFailure = { [weak self] (error) in
             if self == nil { return }
             captureResult.append(false)
             
         }
-        sut?.viewDidload()
+        sut?.viewDidload(date: Date())
         sut?.onTapOnFavroite()
         sut?.onTapOnFavroite()
         XCTAssertEqual(sut?.onFvaroite,false)
     }
     
     class HomeViewModelSpy  : HomeViewModelProtocol{
+        var updateViewOnFailure: ((String) -> Void)?
+        var dataResponce: BaseResponse?
         var onFvaroite: Bool = false
-        
-        func onTapOnFavroite() {
-            onFvaroite = !onFvaroite
-        }
-        
         var dateFormat: String = ""
-        
         var apiKey: String = ""
-        
-        func viewDidload() {
-            fetchPictureOfTheDay(date: Date())
+        var updateViewOnSucess: ((BaseResponse,String) -> Void)?
+        func viewDidload(date: Date) {
+            fetchPictureOfTheDay(date: date, loadFromCacheIfFails: true)
         }
         
-        func fetchPictureOfTheDay(date: Date) {
+        func fetchPictureOfTheDay(date: Date, loadFromCacheIfFails: Bool)  {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
                 self?.updateViewOnSucess?(BaseResponse(date: "",
                                                        title: "",
                                                        explanation: "", url: "", media_type: ""),
                                           "2021,12,22")
-                self?.updateViewOnFailure?(Error.invalidData)
+                self?.updateViewOnFailure?("invalidData")
             }
             
         }
         
-        var updateViewOnSucess: ((BaseResponse,String) -> Void)?
-        
-        var updateViewOnFailure: ((Error) -> Void)?
-        
-        
+        func onTapOnFavroite() {
+            onFvaroite = !onFvaroite
+        }
     }
 }
 

@@ -69,7 +69,7 @@ class HomeVCTestsTests: XCTestCase {
     func test_Indicator_WithErrorHomeResponce() {
         let sut = makeSUT()
         sut?.loadViewIfNeeded()
-        sut?.updateViewOnFailure()
+        sut?.updateViewOnFailure(error: "Error")
         wait(for: 1)
         XCTAssertEqual(sut?.indicator.isAnimating, false)
     }
@@ -142,14 +142,19 @@ class HomeVCTestsTests: XCTestCase {
     }
     
     internal class HomeViewModelSPy : HomeViewModelProtocol{
-        func viewDidload() {
+        func viewDidload(date: Date) {
             
         }
-        func fetchPictureOfTheDay(date: Date) {
+        
+        func fetchPictureOfTheDay(date: Date, loadFromCacheIfFails: Bool) {
             
         }
+        
+        var updateViewOnFailure: ((String) -> Void)?
+        
+        var dataResponce: BaseResponse?
+       
         var updateViewOnSucess: ((BaseResponse, String) -> Void)? = { _,_ in}
-        var updateViewOnFailure: ((Error) -> Void)? = { _ in}
         var dateFormat: String = ""
         var apiKey: String = ""
         var onFvaroite: Bool = false
