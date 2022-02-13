@@ -144,6 +144,7 @@ class HomeVC: UIViewController {
             self.lblError.text = error
             self.contentView.isHidden = true
             self.lblError.isHidden = false
+            self.favButton.isSelected =  false
         }
         
     }

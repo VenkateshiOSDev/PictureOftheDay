@@ -58,6 +58,7 @@ class HomeViewModel : HomeViewModelProtocol {
                     self.dataResponce = catchData
                     self.updateViewOnSucess?(catchData,catchInfo.synchdate)
                 }else{
+                    self.dataResponce = nil
                     self.updateViewOnFailure?("No data available for date: \(dateStr) \n Please Pick Another Day")
                 }
                 break
@@ -70,7 +71,7 @@ class HomeViewModel : HomeViewModelProtocol {
             wishList?.removeAll(where:({$0.date == dataResponce?.date}))
         }else{
             if let dataResponce = dataResponce {
-                wishList?.append(dataResponce)
+                wishList?.insert(dataResponce, at: 0)
             }
         }
         UserDefaultHelper().wishList = wishList
