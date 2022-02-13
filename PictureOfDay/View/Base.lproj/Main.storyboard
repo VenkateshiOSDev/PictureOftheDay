@@ -27,6 +27,12 @@
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="22"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No data available for date: 2022-02-13" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ERX-aC-RaE">
+                                <rect key="frame" x="12" y="438.5" width="390" height="19.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sca-9b-dRm">
                                 <rect key="frame" x="0.0" y="147" width="414" height="666"/>
                                 <subviews>
@@ -102,17 +108,22 @@
                             <constraint firstItem="6DX-t8-GBl" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.5" id="QJW-Rj-CUx"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="sca-9b-dRm" secondAttribute="bottom" id="YIe-2f-3II"/>
                             <constraint firstItem="6DX-t8-GBl" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="14" id="abK-lQ-fWc"/>
+                            <constraint firstItem="ERX-aC-RaE" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="ccx-4l-dC8"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ZBG-en-8wx" secondAttribute="trailing" constant="25" id="dvL-hn-mb9"/>
+                            <constraint firstItem="ERX-aC-RaE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="jwt-kn-YaY"/>
                             <constraint firstItem="VDD-ge-hQn" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="oZ8-mE-zIg"/>
                             <constraint firstItem="sca-9b-dRm" firstAttribute="top" secondItem="6DX-t8-GBl" secondAttribute="bottom" id="p4I-p6-lyP"/>
+                            <constraint firstItem="ERX-aC-RaE" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="qYP-Yy-h4n"/>
                             <constraint firstItem="ZBG-en-8wx" firstAttribute="leading" secondItem="6DX-t8-GBl" secondAttribute="trailing" constant="25" id="r5t-KC-jQK"/>
                             <constraint firstItem="VDD-ge-hQn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rKK-pL-KAp"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="NASA Astronomy Picture of the Day" id="wX7-Yc-TXy"/>
                     <connections>
+                        <outlet property="contentView" destination="sca-9b-dRm" id="iDr-vW-TsH"/>
                         <outlet property="favButton" destination="ZBG-en-8wx" id="cS8-LI-JmE"/>
                         <outlet property="indicator" destination="VDD-ge-hQn" id="yCL-mh-QcY"/>
+                        <outlet property="lblError" destination="ERX-aC-RaE" id="nIG-g8-UNl"/>
                         <outlet property="lblLastUpdated" destination="3LC-ly-ySm" id="M8D-oe-XGz"/>
                         <outlet property="lblTitle" destination="bVu-Lp-h0L" id="wWg-2Z-xWM"/>
                         <outlet property="merdiaView" destination="Xdh-rc-XWk" id="YkS-6G-8U6"/>

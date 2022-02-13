@@ -15,6 +15,8 @@ class HomeVC: UIViewController {
     @IBOutlet weak var indicator : UIActivityIndicatorView!
     @IBOutlet weak var lblLastUpdated : UILabel!
     @IBOutlet weak var favButton : UIButton!
+    @IBOutlet weak var contentView : UIView!
+    @IBOutlet weak var lblError : UILabel!
     var viewModel : HomeViewModelProtocol?
     var datePicker :UIDatePicker!
     var imgViewMedia : UIImageView?
@@ -25,6 +27,19 @@ class HomeVC: UIViewController {
         setpViewModel(view_Model: HomeViewModel(catchRequired: true,
                                                 apiKey: Constants.ApiKey,
                                                 dateFormat: Constants.dateFormat))
+        
+        setupView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        favButton.isSelected = viewModel?.onFvaroite ?? false
+    }
+    
+    
+    func setupView(){
+        contentView.isHidden = true
+        lblError.isHidden = true
         setupDatePicker()
         
         indicator.color = UIColor(named: "LoaderColor")
@@ -37,12 +52,6 @@ class HomeVC: UIViewController {
         favButton.setImage(UIImage(systemName: "star"), for: .normal)
         favButton.setImage(UIImage(systemName: "star.fill"), for: .selected)
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        favButton.isSelected = viewModel?.onFvaroite ?? false
-    }
-    
     func setupDatePicker(){
         datePicker = UIDatePicker.init(frame: CGRect(x: 0, y: 0, width: view.bounds.size.width, height: 200))
         datePicker.addTarget(self, action: #selector(self.dateChanged), for: .allEvents)
@@ -58,7 +67,8 @@ class HomeVC: UIViewController {
     @objc func datePickerDone() {
         indicator.startAnimating()
         txtDatePicker.resignFirstResponder()
-        viewModel?.fetchPictureOfTheDay(date: datePicker.date)
+        viewModel?.fetchPictureOfTheDay(date: datePicker.date,
+                                        loadFromCacheIfFails: false)
     }
     
     @objc func dateChanged() {
@@ -78,6 +88,8 @@ class HomeVC: UIViewController {
         viewModel?.updateViewOnSucess = { [weak self] (res,lastSynchdate) in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
+                self.contentView.isHidden = false
+                self.lblError.isHidden = true
                 self.txtDatePicker.text = lastSynchdate
                 self.updateView(with: res,
                                 lastSynchdate:lastSynchdate)
@@ -86,7 +98,8 @@ class HomeVC: UIViewController {
         
         viewModel?.updateViewOnFailure = { [weak self] error in
             guard let self = self else { return }
-            self.updateViewOnFailure()
+            self.updateViewOnFailure(error:error)
+           
         }
     }
     
@@ -124,10 +137,13 @@ class HomeVC: UIViewController {
         
     }
     
-    func updateViewOnFailure(){
+    func updateViewOnFailure(error:String){
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.indicator.stopAnimating()
+            self.lblError.text = error
+            self.contentView.isHidden = true
+            self.lblError.isHidden = false
         }
         
     }

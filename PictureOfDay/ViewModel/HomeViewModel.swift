@@ -9,9 +9,9 @@ import Foundation
 
 protocol HomeViewModelProtocol: AnyObject{
     func viewDidload()
-    func fetchPictureOfTheDay(date:Date)
+    func fetchPictureOfTheDay(date:Date,loadFromCacheIfFails:Bool)
     var updateViewOnSucess : ((BaseResponse,String)->Void)? { get set }
-    var updateViewOnFailure : ((Error)->Void)? { get set }
+    var updateViewOnFailure : ((String)->Void)? { get set }
     var dateFormat:String {get}
     var apiKey:String {get}
     var onFvaroite : Bool{get}
@@ -19,7 +19,7 @@ protocol HomeViewModelProtocol: AnyObject{
 }
 class HomeViewModel : HomeViewModelProtocol {
     var updateViewOnSucess : ((BaseResponse,String)->Void)? = { _,_ in }
-    var updateViewOnFailure : ((Error)->Void)?  = { _ in }
+    var updateViewOnFailure : ((String)->Void)?  = { _ in }
     private let catchRequired:Bool
     var apiKey:String
     var dateFormat:String
@@ -36,10 +36,10 @@ class HomeViewModel : HomeViewModelProtocol {
     }
     
     func viewDidload(){
-        fetchPictureOfTheDay(date:Date())
+        fetchPictureOfTheDay(date:Date(), loadFromCacheIfFails: true)
     }
     
-    func fetchPictureOfTheDay(date:Date){
+    func fetchPictureOfTheDay(date:Date,loadFromCacheIfFails:Bool){
         let dateStr = date.string(format: dateFormat)
         NetworkManager.makeApiCall(request: .Home(date: dateStr, apiKey: apiKey), resultType: BaseResponse.self) { [weak self] result in
             guard let self = self else { return }
@@ -52,12 +52,11 @@ class HomeViewModel : HomeViewModelProtocol {
                 self.dataResponce = data
                 self.updateViewOnSucess?(data,dateStr)
                 break
-            case .failure(let error):
-                if let catchInfo = UserDefaultHelper().catchInfo, self.catchRequired ,let catchData = catchInfo.catchInfo{
+            case .failure(_):
+                self.updateViewOnFailure?("No data available for date: \(dateStr) \n Please Pick Another Day")
+                if let catchInfo = UserDefaultHelper().catchInfo, loadFromCacheIfFails ,let catchData = catchInfo.catchInfo{
                     self.dataResponce = catchData
                     self.updateViewOnSucess?(catchData,catchInfo.synchdate)
-                }else{
-                    self.updateViewOnFailure?(error)
                 }
                 break
             }
